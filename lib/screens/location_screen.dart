@@ -1,20 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:weatherapp/services/weather.dart';
 import 'package:weatherapp/utilities/constants.dart';
+import 'city_screen.dart';
 
 class LocationScreen extends StatefulWidget {
-
   LocationScreen({this.locationWeather});
 
   final locationWeather;
-
 
   @override
   _LocationScreenState createState() => _LocationScreenState();
 }
 
 class _LocationScreenState extends State<LocationScreen> {
-
   WeatherModel weatherModel = WeatherModel();
   int temp;
   String weatherIcon;
@@ -22,19 +20,19 @@ class _LocationScreenState extends State<LocationScreen> {
   String message;
 
   @override
-  void initState(){
+  void initState() {
     super.initState();
     updateUI(widget.locationWeather);
     print(temp);
   }
-  
-  void updateUI(dynamic weatherData){
+
+  void updateUI(dynamic weatherData) {
     setState(() {
-      if(weatherData == null) {
+      if (weatherData == null) {
         temp = 0;
         weatherIcon = 'Error';
         message = 'Unable to Locate';
-        cityName='';
+        cityName = '';
         return;
       } else {
         temp = weatherData['main']['temp'].toInt();
@@ -78,7 +76,15 @@ class _LocationScreenState extends State<LocationScreen> {
                     ),
                   ),
                   FlatButton(
-                    onPressed: () {},
+                    onPressed: () async {
+                      var typedName = await Navigator.push(context,MaterialPageRoute(builder:(context){
+                        return CityScreen();
+                      }));
+                      if(typedName != null){
+                        var weatherData = await weatherModel.getCityWeather(typedName);
+                        updateUI(weatherData);
+                      }
+                    },
                     child: Icon(
                       Icons.location_city,
                       size: 50.0,
@@ -91,7 +97,7 @@ class _LocationScreenState extends State<LocationScreen> {
                 child: Row(
                   children: <Widget>[
                     Text(
-                      '$temp °C',
+                      '$temp °',
                       style: kTempTextStyle,
                     ),
                     Text(

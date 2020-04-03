@@ -4,6 +4,13 @@ import 'package:weatherapp/utilities/constants.dart';
 
 class WeatherModel {
 
+  Future<dynamic> getCityWeather(String cityName) async {
+    var url  = '$kOpenWeatherMapURL?q=$cityName&appid=$kApiKey&units=metric';
+    NetworkHelper networkHelper = NetworkHelper(url);
+    var weatherData = await networkHelper.getData();
+    return weatherData;
+  }
+
   Future<dynamic> getLocationWeather() async{
     Location location = Location();
     await location.getCurrentLocation();
